@@ -15,7 +15,7 @@ async def root(request: Request):
         "request": request,
         "title": "Магазин глупостей",
         "products": [
-            {"name": "Глупость 1", "price": 250, "image_url": "/static/images/zazu.jpg"},
+            {"name": "Флаг", "price": 0, "image_url": "/static/images/flag.png"},
             {"name": "Глупость 2", "price": 100, "image_url": "/static/images/zazu.jpg"},
             {"name": "Глупость 3", "price": 0, "image_url": "/static/images/zazu.jpg"},
         ],
