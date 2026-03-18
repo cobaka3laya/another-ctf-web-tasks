@@ -1,0 +1,4 @@
+__pycache__/
+.venv/
+task1/__pycache__/
+*.db
