@@ -1,67 +1,65 @@
 from functools import wraps
-import sqlite3
 import logging
+import sqlite3
+from typing import Self
 
 from models.product import Product
 
-def cursor_connection(func):
-    """ Decorator for automatic database connection and disconnection """
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        conn = sqlite3.connect('db.db')
-        try:
-            kwargs["cursor"] = conn.cursor
-            result = func(*args, **kwargs)
-            conn.commit()
-            return result
-        except Exception as e:
-            conn.rollback()
-            logging.error(f'Database error: {e}')
-            raise
-        finally:
-            conn.commit()
-            conn.close()
-    return wrapper
 
+class DatabaseSession:
+    """Database session class."""
 
-class Database:
-    @cursor_connection
-    def __init__(self, cursor=None) -> None:
-        ''' Init the database '''
-        if not cursor:
-            return
-
-        with cursor() as _cursor:
-            _cursor.execute('''CREATE TABLE Products (id INTEGER PRIMARY KEY, name TEXT NOT NULL, price REAL NOT NULL, image_url TEXT)''')
-    
-    @staticmethod
-    def insert_products(products: list[Product], cursor=None) -> None:
-        ''' Insert products into the database '''
-        if not cursor:
-            return
-
-        with cursor() as _cursor:
-            for product in products:
-                _cursor.execute(
-                    '''INSERT VALUES INTO Products (id, name, price, image_url) VALUES (?, ?, ?, ?)''', 
-                    (product.id, product.name, product.price, product.image_url)
-                )
-
-    @staticmethod
-    def get_product_by_id(id: int, cursor=None) -> Product:
-        ''' Get products from database by ID '''
-        if not cursor:
-            return
+    def __init__(self, db_file='db.db') -> None:
+        """Database session constructor."""
+        self.db_file = db_file
+        self.connection = None
         
+        # Initializing the products table
+        self.connect()
+        with self.connection.cursor() as curs:
+            curs.execute('''CREATE TABLE Products 
+                        (id INTEGER PRIMARY KEY,
+                        name TEXT NOT NULL,
+                        price REAL NOT NULL,
+                        image_url TEXT)''')           
+
+    def connect(self):
+        """Connect to the SQLite database."""
+        try:
+            self.connection = sqlite3.connect(self.db_file)
+            self.cursor = self.connection.cursor()
+        except Exception as e:
+            logging.error(f'Error during database connection: {e}')
+
+    def close(self):
+        """Disconnect from the SQLite database."""
+        if self.connection:
+            self.connection.close()
+
+    def get_product_by_id(self, product_id: int) -> Product:
         result = None
-        with cursor() as _cursor:
-            _cursor.execute(
-                '''SELECT * FROM Products WHERE id = ?''',
-                (id,)
+        with self.connection.cursor() as curs:
+            curs.execute(
+                '''SELECT * 
+                FROM Products
+                WHERE id = ?
+                ''',
+                (product_id,)
             )
-            result = _cursor.fetchone()
+            result = curs.fetchone()
 
         return Product(*result)
 
-
-    
+    def add_products(self, products: list[Product]) -> None:
+        """Add products to the product table."""
+        for product in products:
+            with self.connection.cursor() as curs:
+                curs.execute(
+                    '''INSERT VALUES
+                    INTO Products
+                    (id, name, price, image_url)
+                    VALUES (?, ?, ?, ?)
+                    ''',
+                    (product.id, product.name, product.price,
+                    product.image_url)
+                )

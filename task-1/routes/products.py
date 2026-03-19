@@ -1,3 +1,5 @@
+"""Routes for interacting with products table"""
+
 import logging
 from typing import Annotated
 
@@ -15,25 +17,25 @@ def get_product_page(
     request: Request,
     product_id: int,
     template: Annotated[Jinja2Templates, Depends(get_template)],
-    db: Annotated[Database, Depends(get_db)]
-):
-    """A get route for getting a product by its id"""
+    db: Annotated[Database, Depends(get_db)],
+) -> HTMLResponse:
+    """A get route for getting a product by its id."""
     try:
-        current_product = db.get_product_by_id(id)
-        
+        current_product = db.get_product_by_id(product_id)
+
         context = {
             "request": request,
             "title": current_product.name,
-            "product": current_product
+            "product": current_product,
         }
 
-        path = 'product.html'
-        if current_product.name == 'Флаг':
-            path = 'flag_product.html'
+        path = "product.html"
+        if current_product.name == "Флаг":
+            path = "flag_product.html"
 
         return template.TemplateResponse(path, context=context)
-    
+
     except Exception as e:
-        err_msg = f'Error during getting product page: {e}'
+        err_msg = f"Error during getting product page: {e}"
         logging.error(err_msg)
         raise HTTPException(status_code=400, detail=err_msg)
