@@ -23,3 +23,8 @@ def get_db() -> Generator[DatabaseSession, None, None]:
         raise
     finally:
         db.close()
+
+
+def get_logger() -> logging.Logger:
+    """Returns logger"""
+    return logging.getLogger('uvicorn.error')

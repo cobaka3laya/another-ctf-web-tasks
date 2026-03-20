@@ -12,8 +12,8 @@ from utils import get_template, get_db
 
 product_router = APIRouter()
 
-@product_router.get("/products/{product_id}", response_class=HTMLResponse)
-def get_product_page(
+@product_router.get("/products/id/{product_id}", response_class=HTMLResponse)
+async def get_product_page(
     request: Request,
     product_id: int,
     template: Annotated[Jinja2Templates, Depends(get_template)],
@@ -39,3 +39,5 @@ def get_product_page(
         err_msg = f"Error during getting product page: {e}"
         logging.error(err_msg)
         raise HTTPException(status_code=400, detail=err_msg)
+
+    

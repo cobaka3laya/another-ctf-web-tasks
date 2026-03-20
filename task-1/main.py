@@ -1,3 +1,4 @@
+import logging
 from typing import Annotated
 
 from fastapi import FastAPI, Request, Depends
@@ -16,8 +17,11 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 async def root(
     request: Request, 
     template: Annotated[Jinja2Templates, Depends(utils.get_template)],
+    logger: Annotated[logging.Logger, Depends(utils.get_logger)],
 ) -> HTMLResponse:
     """Root route."""
+    logger.info('test')
+
     context = {
         "request": request,
         "title": "Магазин глупостей",

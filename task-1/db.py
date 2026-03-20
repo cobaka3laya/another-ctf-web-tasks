@@ -20,8 +20,7 @@ class DatabaseSession:
             curs.execute('''CREATE TABLE Products 
                         (id INTEGER PRIMARY KEY,
                         name TEXT NOT NULL,
-                        price REAL NOT NULL,
-                        image_url TEXT)''')           
+                        price REAL NOT NULL)''')           
 
     def connect(self):
         """Connect to the SQLite database."""
@@ -49,6 +48,21 @@ class DatabaseSession:
             result = curs.fetchone()
 
         return Product(*result)
+    
+    def get_products(self, limit, offset) -> list[Product]:
+        results = []
+        with self.connection.cursor() as curs:
+            curs.execute(
+                '''SELECT *
+                FROM Products
+                ORDER BY id
+                LIMIT ?
+                OFFSET ?
+                ''',
+                (limit, offset)
+            )
+            results = curs.fetchall()
+        return [Product(*result) for result in results]
 
     def add_products(self, products: list[Product]) -> None:
         """Add products to the product table."""
