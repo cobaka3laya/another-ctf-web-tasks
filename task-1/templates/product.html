@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="container">
+        <div class="product_card">
+            <img src="{{ product.image }}" alt="{{ product.name }}" class="product_card_image"/>
+            <div class="product_card_subcontainer">
+                <h2>{{ product.name }}</h2>
+                {% if product.price > 0%}
+                    <p class="product_price">{{ product.price }} листиков</p>
+                {% else %}
+                    <p class="product_price">Бесплатно</p>
+                {% endif %}
+                <button class="buy_button">Купить</button>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -23,7 +23,8 @@ class DatabaseSession:
                     (id INTEGER PRIMARY KEY,
                     name TEXT NOT NULL,
                     price REAL NOT NULL,
-                    image_url TEXT)''')           
+                    image_url TEXT,
+                    url TEXT)''')           
         self.connection.commit()
 
     def connect(self):
@@ -72,13 +73,16 @@ class DatabaseSession:
     def add_products(self, products: list[Product]) -> None:
         """Add products to the product table."""
         for product in products:
+            if not product.url:
+                product.url = f'/products/{product.id}'
+
             self.cursor.execute(
                 '''INSERT OR REPLACE
                 INTO Products
-                (id, name, price, image_url)
-                VALUES (?, ?, ?, ?)
+                (id, name, price, image_url, url)
+                VALUES (?, ?, ?, ?, ?)
                 ''',
                 (product.id, product.name, product.price,
-                product.image_url)
+                product.image_url, product.url)
             )
             self.connection.commit()

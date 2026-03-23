@@ -70,3 +70,42 @@ main {
     color: black;
     cursor: pointer;
 }
+
+.product_card {
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: center;
+    gap: 20px;
+    width: fit-content;
+    height: fit-content;
+    padding: 20px;
+    box-shadow: 0 0 10px #aeaeae;
+    transition: transform 0.2s ease-out
+}
+
+.product_card:hover {
+    transform: scale(1.01);
+}
+
+.product_card_subcontainer {
+    flex-direction: column;
+    gap: 20px;
+}
+
+.product_button {
+    background-color: rgb(40, 136, 53);
+    border: solid 1px rgb(25, 95, 42);
+    color: white;
+    font-size: 1rem;
+    padding: 5px;
+    transition: background-color 0.2s ease-out, width 0.2s ease-out; 
+}
+
+.product_button:hover {
+    background-color: rgba(255, 255, 255, 0.8);
+    color: black;
+    cursor: pointer;
+}

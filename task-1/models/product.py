@@ -7,3 +7,4 @@ class Product:
     name: str
     price: float
     image_url: Optional[str]
+    url: Optional[str] = None

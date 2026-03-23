@@ -12,7 +12,7 @@ from utils import get_template, get_db
 
 product_router = APIRouter()
 
-@product_router.get("/products/id/{product_id}", response_class=HTMLResponse)
+@product_router.get("/products/{product_id}", response_class=HTMLResponse)
 async def get_product_page(
     request: Request,
     product_id: int,
