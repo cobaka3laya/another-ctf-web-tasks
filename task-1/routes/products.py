@@ -7,7 +7,7 @@ from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
-from db import Database
+from db import DatabaseSession
 from utils import get_template, get_db
 
 product_router = APIRouter()
@@ -17,7 +17,7 @@ async def get_product_page(
     request: Request,
     product_id: int,
     template: Annotated[Jinja2Templates, Depends(get_template)],
-    db: Annotated[Database, Depends(get_db)],
+    db: Annotated[DatabaseSession, Depends(get_db)],
 ) -> HTMLResponse:
     """A get route for getting a product by its id."""
     try:
@@ -39,5 +39,4 @@ async def get_product_page(
         err_msg = f"Error during getting product page: {e}"
         logging.error(err_msg)
         raise HTTPException(status_code=400, detail=err_msg)
-
     

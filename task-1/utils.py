@@ -15,6 +15,7 @@ def get_db() -> Generator[DatabaseSession, None, None]:
     """Returns database connection."""
     db = DatabaseSession()
     try:
+        db.connect()
         yield db
         db.connection.commit()
     except Exception as e:
