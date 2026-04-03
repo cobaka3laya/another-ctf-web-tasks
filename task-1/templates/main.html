@@ -4,13 +4,13 @@
     <div class="container">
         {% for product in products %}
             <div class="product_container">
-                <img src="{{ product.image_url }}" alt="{{ product.name }}" class="product_image">
+                <img src="{{ url_for('static', path=product.image_url) }}" alt="{{ product.name }}" class="product_image">
                 <h2 class="product_name">{{ product.name }}</h2>
                 {% if product.price > 0%}
                     <p class="product_price">{{ product.price }} листиков</p>
                 {% else %}
                     <p class="product_price">Бесплатно</p>
-                {% endif %}
+                {% endif %} 
                 <a href="{{ product.url }}" class="product_link">
                     <button class="product_button">Просмотреть товар</button>
                 </a>

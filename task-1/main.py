@@ -27,8 +27,8 @@ async def root(
 ) -> HTMLResponse:
     """Root route."""
     db.add_products([
-        Product(0, "Флаг", 50, "/static/images/flag.png"),
-        Product(1, 'Глупый кот', 200, "/static/images/zazu.jpg")
+        Product(0, "Флаг", 50, "images/flag.png"),
+        Product(1, 'Глупый кот', 200, "images/zazu.jpg")
     ])
 
     prods = db.get_products(0, 5)
